@@ -17,4 +17,5 @@ Contact.prototype.addAddress = function(street,street2,city,state,zip) {
 }
 
 Contact.prototype.printAddress = function () {
-  console.log(this.address.street + "\n" + if (this.address.street2) {this.address.street2 + "\n" + } this.address.city + ', ' + this.address.state + ' ' + this.address.zip);
+  console.log(this.address.street + "\n" + this.address.city + ', ' + this.address.state + ' ' + this.address.zip)
+};
