@@ -6,7 +6,6 @@ class Contact {
     this.email = []
     this.phone = [];
     this.addresses = [];
-    this.birthday = {};
     this.relationships = {
       spouse: [],
       children: [],
@@ -155,6 +154,10 @@ Phone: ${this.printPhone()}
 
 Email: ${this.printEmail()}
 
+Birthday: ${this.printBirthday()}
+
+Age: ${this.age}
+
 Address: ${this.printAddress()}
 
 Relationships: ${this.printRelationships()}`);
@@ -242,6 +245,33 @@ Relationships: ${this.printRelationships()}`);
 
   }
 
+  addBirthday(month,day,year) {
+    if (!year) {
+      year = 1801;
+    } 
+    this.birthday = new Date(year,month,day);
+    if (year !== 1801) {
+      let age = Math.floor((Date.now() - this.birthday) / 31536000000);
+      this.age = age;
+    }
+  }
+
+  printBirthday() {
+
+    if (this.birthday) {
+    
+      let MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      
+      let day = this.birthday.getDate();
+      let year = this.birthday.getFullYear();
+      let month = this.birthday.getMonth();
+      if (year === 1801) year = '';
+      else year = ', '+year;
+      
+      return `${MONTHS[month]} ${day}${year}`;
+    } else return 'Unknown';
+  }
+
 
 
 }
@@ -253,7 +283,7 @@ Dave.addEmail('work','dave@dmfwoodworks.com');
 Dave.addAddress('home','2800 N Lake Shore Drive','Unit 2101','Chicago', 'IL','60657');
 Dave.addAddress('work','6855 W 65th St','','Chicago', 'IL','60638');
 Dave.addPhone('home', '7732330025');
-
+Dave.addBirthday(2,12,1987);
 
 const Ed = new Contact('Ed','Fudacz');
 Ed.addPhone('cell','7733685517');
@@ -261,6 +291,7 @@ Ed.addEmail('main','davidfudacz@gmail.com');
 Ed.addEmail('work','dave@dmfwoodworks.com');
 Ed.addAddress('home','2800 N Lake Shore Drive','Unit 2101','Chicago', 'IL','60657');
 
+Ed.addBirthday(0,15,1982);
 Ed.addRelationship(Dave,'sibling')
 Ed.addRelationship(false,'spouse','Ashley','Jensen-Fudacz')
 
