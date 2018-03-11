@@ -15,6 +15,7 @@ class Contact {
       other: [],
     }
     this.dateAdded = new Date();
+    this.events = [];
 
   }
 
@@ -158,6 +159,8 @@ Birthday: ${this.printBirthday()}
 
 Age: ${this.age}
 
+Events: ${this.printEvents()}
+
 Address: ${this.printAddress()}
 
 Relationships: ${this.printRelationships()}`);
@@ -246,13 +249,43 @@ Relationships: ${this.printRelationships()}`);
   }
 
   addBirthday(month,day,year) {
+    let yearExists = true;
     if (!year) {
+      yearExists = false;
       year = 1801;
     } 
     this.birthday = new Date(year,month,day);
-    if (year !== 1801) {
-      let age = Math.floor((Date.now() - this.birthday) / 31536000000);
-      this.age = age;
+    //calculate the age of the Contact
+    if (yearExists) {
+      function howManyLeapDays (birthday) {
+        //get the current year
+        let thisYear = new Date();
+        thisYear = thisYear.getFullYear();
+        //create an array of all the leap years since 1900
+        let leapYears = [];
+        for (var i = 1900; i < thisYear; i += 4) {
+          if (!(i%100 === 0 && i%400 !== 0)) {
+            leapYears.push(i);
+          }
+        }
+
+        let withoutLeaps = Date.now() - birthday;
+        let birthYear = birthday.getFullYear();
+
+        //work backward through that array and increment a count of leap days
+        let leapDays = 0;
+        while (birthYear < leapYears[leapYears.length-1]) {
+          leapDays++;
+          leapYears.pop();
+        }
+
+        return leapDays;
+
+      }
+      let leapDaysInMil = howManyLeapDays(this.birthday) * 86400000;
+      let leapDayOffset = (Date.now() - this.birthday) - leapDaysInMil;
+      let age = (leapDayOffset / 31536000000);
+      this.age = Math.floor(age);
     }
   }
 
@@ -272,6 +305,22 @@ Relationships: ${this.printRelationships()}`);
     } else return 'Unknown';
   }
 
+  addEvent (str, date) {
+    let timestamp = date || new Date();
+    this.events.push({'timestamp':timestamp, 'event': str});
+  }
+
+  printEvents () {
+    let output = '';
+    this.events.forEach(elem => {
+      output += `${elem.timestamp}: ${elem.event}
+`;
+    })
+    return output;
+  }
+
+
+
 
 
 }
@@ -283,7 +332,8 @@ Dave.addEmail('work','dave@dmfwoodworks.com');
 Dave.addAddress('home','2800 N Lake Shore Drive','Unit 2101','Chicago', 'IL','60657');
 Dave.addAddress('work','6855 W 65th St','','Chicago', 'IL','60638');
 Dave.addPhone('home', '7732330025');
-Dave.addBirthday(2,12,1987);
+Dave.addBirthday(1,28,1987);
+Dave.addEvent('went to school');
 
 const Ed = new Contact('Ed','Fudacz');
 Ed.addPhone('cell','7733685517');
