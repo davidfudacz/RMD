@@ -1,4 +1,5 @@
 'use strict'
+const Sequelize = require('sequelize');
 const express = require('express');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
@@ -6,12 +7,17 @@ const nunjucks = require('nunjucks');
 const app = express();
 const routes = require('./routes');
 const models = require('./models');
+const seeder = require('./seeders/20180311184332-rmd-seed');
 
+const queryInterface = models.db.getQueryInterface();
 
 
 const pg = require('pg');
 
 models.db.sync({force: true})
+.then(function () {
+    return seeder.up(queryInterface,Sequelize);
+})
 .then(function () {
     console.log('All tables created!');
     app.listen(3000, function () {

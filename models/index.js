@@ -13,11 +13,11 @@ const Contact = db.define('contacts', {
   },
   middleName: {
     type: Sequelize.STRING, 
-    allownull: false,
+    allownull: true,
   },
   dateOfBirth: {
     type: Sequelize.DATEONLY, 
-    allownull: false,
+    allownull: true,
     validate: {
       isDate: true,
     }
@@ -77,10 +77,6 @@ const Country = db.define('countries', {
 });
 
 const PhoneNumber = db.define('phoneNumbers', {
-  type: {
-    type: Sequelize.INTEGER, 
-    allownull: false,
-  },
   number: {
     type: Sequelize.STRING, 
     allownull: false,
@@ -88,24 +84,20 @@ const PhoneNumber = db.define('phoneNumbers', {
 });
 
 const Email = db.define('emails', {
-  type: {
-    type: Sequelize.INTEGER, 
-    allownull: false,
-  },
   emailAddress: {
     type: Sequelize.STRING, 
     allownull: false,
   },
 });
 
-const contactTypeName = db.define('contactTypeName', {
+const PhoneOrEmailTypeName = db.define('phoneOrEmailTypeName', {
   type: {
     type: Sequelize.STRING, 
     allownull: false,
   },
 });
 
-const Relationship = db.define('relationships', {
+const RelationshipType = db.define('relationshipTypes', {
   singular: {
     type: Sequelize.STRING, 
     allownull: false,
@@ -113,6 +105,13 @@ const Relationship = db.define('relationships', {
   plural: {
     type: Sequelize.STRING, 
     allownull: false,
+  },
+});
+
+const Relationship = db.define('relationships', {
+  target: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
   },
 });
 
@@ -130,6 +129,24 @@ const Event = db.define('events', {
   },
 });
 
+Contact.belongsToMany(PhoneNumber, {as: 'PhoneNum', through: 'ContactPhone'});
+PhoneNumber.belongsToMany(Contact, {through: 'ContactPhone'});
+Contact.belongsToMany(Address, {as: 'Address', through: 'ContactAddress'});
+Address.belongsToMany(Contact, {through: 'ContactAddress'});
+Email.belongsTo(PhoneOrEmailTypeName);
+PhoneNumber.belongsTo(PhoneOrEmailTypeName);
+Relationship.belongsTo(RelationshipType);
+Contact.hasMany(Email);
+Contact.hasMany(Event);
+Contact.hasMany(PhoneNumber);
+Contact.belongsToMany(Contact, {as: 'Children', through: 'contactChildren'});
+Contact.belongsToMany(Contact, {as: 'Parents', through: 'contactParents'});
+Contact.belongsTo(Contact, {as: 'Spouse', through: 'contactSpouse'});
+Contact.belongsToMany(Contact, {as: 'Siblings', through: 'contactSiblings'});
+Contact.belongsToMany(Contact, {as: 'Relatives', through: 'contactRelatives'});
+Contact.belongsToMany(Contact, {as: 'Others', through: 'contactOthers'});
+
+
 
 
 module.exports = {
@@ -140,7 +157,7 @@ module.exports = {
   Country,
   PhoneNumber,
   Email,
-  contactTypeName,
-  Relationship,
+  PhoneOrEmailTypeName,
+  RelationshipType,
   Event,
 }
