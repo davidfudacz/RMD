@@ -22,15 +22,18 @@ const Contact = db.define('contacts', {
       isDate: true,
     },
     
+    
   },
 }, {
   getterMethods: {
     prettyDOB: function () {
+
       let birthday = new Date(this.getDataValue('dateOfBirth'));
+      
 
       let MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
       
-      let day = birthday.getDate();
+      let day = birthday.getDate()+1;//SOMETHING GOING ON WITH NEW DATE THAT MAKES THE DATE OFF BY 1
       let year = birthday.getFullYear();
       let month = birthday.getMonth();
       // console.log(day, month, year);

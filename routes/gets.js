@@ -13,26 +13,30 @@ router.get('/', function (req,res,next) {
 
 router.get('/contacts/', function (req,res,next) {
 
-  m.Contact.findAll()
+  m.Contact.findAll({
+    order: [
+      ['lastName', 'ASC'],
+      ['firstName', 'ASC'],
+    ],
+  })
     .then(contactObjs => {
       res.render('index',{
-        contacts: contactObjs
+        contacts: contactObjs,
       });
     })
     .catch(next);
 });
 
-router.get('/contacts/edit', function (req,res,next) {
-  res.render('edit');
+router.get('/contacts/add', function (req,res,next) {
+  res.render('inputInfo');
 });
 
 router.get('/contacts/:id/edit', function (req,res,next) {
   console.log(req.params);
   m.Contact.findById(req.params.id)
     .then(contactObj => {
-      console.log(`We're here`);
-      res.render('edit',{
-        contact: contactObj
+      res.render('inputInfo',{
+        contact: contactObj,
       });
     })
     .catch(next);

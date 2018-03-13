@@ -12,11 +12,7 @@ router.post('/contacts/edit',function (req,res,next) {
     where: contact,
   })
     .spread((contact, wasCreated) => {
-      if (wasCreated) {
-        console.log('created a new user')
-        return m.Contact.create(contact);
-      }
-      else {
+      if (!wasCreated) {
         console.log('found an existing user')
       }
     })
