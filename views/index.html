@@ -1,9 +1,11 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <h3>Pages</h3>
+  <h3>Contacts</h3>
   <hr>
   <ul class="list-unstyled">
-    <!-- PLACEHOLDER LIST OF PAGES -->
+    {% for contact in contacts %}
+    <li><a href='/contacts/{{ contact.id }}'>{{ contact.firstLast }}</a></li>
+    {% endfor %}
   </ul>
 {% endblock %}

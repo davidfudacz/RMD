@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h3>{{ contact.firstLast }}</h3>
+  <hr>
+  <ul class="list-unstyled">
+      <li>{{ contact.fullName }}</li>
+      <li>{{ contact.prettyDOB }}</li>
+  </ul>
+  <a href="{{ contact.id }}/edit">Edit this Contact</a>
+{% endblock %}

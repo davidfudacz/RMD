@@ -46,4 +46,7 @@ app.use(bodyParser.json())
 app.use(express.static(__dirname + '/public'))
 
 app.use(routes);
+app.use((err,req,res,next) => {
+    res.status(500).send(err);
+})
 

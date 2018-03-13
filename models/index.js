@@ -20,8 +20,29 @@ const Contact = db.define('contacts', {
     allownull: true,
     validate: {
       isDate: true,
-    }
+    },
+    
   },
+}, {
+  getterMethods: {
+    prettyDOB: function () {
+      let birthday = new Date(this.getDataValue('dateOfBirth'));
+
+      let MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      
+      let day = birthday.getDate();
+      let year = birthday.getFullYear();
+      let month = birthday.getMonth();
+      // console.log(day, month, year);
+      return `${MONTHS[month]} ${day}, ${year}`;
+    },
+    firstLast: function () {
+      return this.firstName + ' ' + this.lastName;
+    },
+    fullName: function () {
+      return this.firstName + ' ' + this.middleName + ' ' + this.lastName;
+    }
+  }
 });
 
 const Address = db.define('addresses', {
@@ -141,7 +162,7 @@ Contact.hasMany(Event);
 Contact.hasMany(PhoneNumber);
 Contact.belongsToMany(Contact, {as: 'Children', through: 'contactChildren'});
 Contact.belongsToMany(Contact, {as: 'Parents', through: 'contactParents'});
-Contact.belongsTo(Contact, {as: 'Spouse', through: 'contactSpouse'});
+Contact.belongsTo(Contact, {as: 'Spouse'});
 Contact.belongsToMany(Contact, {as: 'Siblings', through: 'contactSiblings'});
 Contact.belongsToMany(Contact, {as: 'Relatives', through: 'contactRelatives'});
 Contact.belongsToMany(Contact, {as: 'Others', through: 'contactOthers'});

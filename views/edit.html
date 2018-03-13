@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div style="margin-top: 75px">
+<h3>Add or Edit</h3>
+  <hr>
+  <form method="POST" action="/contacts/edit">
+    
+    
+    <div class="form-group">
+        <label for="firstName" class="col-sm-2 control-label">First Name</label>
+        <div class="col-sm-10">
+          <input name="firstName" type="text" value = "{{ contact.firstName }}" class="form-control"/>
+        </div>
+        <label for="middleName" class="col-sm-2 control-label">Middle Name</label>
+        <div class="col-sm-10">
+          <input name="middleName" type="text" value = "{{ contact.middleName }}" class="form-control"/>
+        </div>
+        <label for="lastName" class="col-sm-2 control-label">Last Name</label>
+        <div class="col-sm-10">
+          <input name="lastName" type="text" value = "{{ contact.lastName }}" class="form-control"/>
+        </div>
+        <label for="dateOfBirth" class="col-sm-2 control-label">Date of Birth</label>
+        <div class="col-sm-10">
+            <input id="dateOfBirth" type="date" value = "{{ contact.dateOfBirth }}" class="form-control"/>
+        </div>
+    </div>
+    
+
+    <div class="col-sm-offset-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">submit</button>
+    </div>
+  
+  </form>
+</div>
+{% endblock %}
