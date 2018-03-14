@@ -110,6 +110,7 @@ const Email = db.define('emails', {
   emailAddress: {
     type: Sequelize.STRING, 
     allownull: false,
+    unique: true,
   },
 });
 

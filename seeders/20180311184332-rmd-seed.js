@@ -2,9 +2,9 @@
 const Sequelize = require('sequelize');
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    console.log(queryInterface.bulkInsertQuery);
-    return queryInterface.bulkInsert('contacts', [{
+  up: (m) => {
+    
+    m.Contact.bulkCreate([{
       firstName: 'Laura',
       lastName: 'Fudacz',
       middleName: 'Anne',
@@ -50,7 +50,21 @@ module.exports = {
       dateOfBirth: '1986-12-03',
       createdAt: new Date(),
       updatedAt: new Date(),
-    }]);
+    }])
+    .then((users) => console.log('Basic Contacts created successfully!'))
+    .catch(err);
+
+    m.PhoneOrEmailTypeName.bulkCreate([{
+      type: 'home'
+    },
+    {
+      type: 'work' 
+    },
+    {
+      type: 'mobile'
+    }])
+    .then((types) => console.log('Phone & Email types created successfully!'))
+    .catch(err);
     
     
     

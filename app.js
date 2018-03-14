@@ -16,7 +16,7 @@ const pg = require('pg');
 
 models.db.sync({force: true})
 .then(function () {
-    return seeder.up(queryInterface,Sequelize);
+    seeder.up(models);
 })
 .then(function () {
     console.log('All tables created!');
