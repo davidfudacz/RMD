@@ -51,22 +51,48 @@ module.exports = {
       createdAt: new Date(),
       updatedAt: new Date(),
     }])
-    .then((users) => console.log('Basic Contacts created successfully!'))
-    .catch(err);
+    .then(() => {
+      console.log('Inital Contacts created successfully!')
+    })
+    .catch(console.error.bind(console));
 
     m.PhoneOrEmailTypeName.bulkCreate([{
-      type: 'home'
+      name: 'home',
     },
     {
-      type: 'work' 
+      name: 'work',
     },
     {
-      type: 'mobile'
+      name: 'mobile',
     }])
-    .then((types) => console.log('Phone & Email types created successfully!'))
-    .catch(err);
-    
-    
+    .then(() => {
+      console.log('Phone & Email types created successfully!')
+    })
+    .catch(console.error.bind(console));
+
+
+
+    let ed = m.Contact.findById(3);
+    let dave = m.Contact.findById(6);
+    let laura = m.Contact.findById(1);
+    let mom = m.Contact.findById(4);
+    let dad = m.Contact.findById(2);
+
+
+    Promise.all([
+      ed,
+      dave
+    ])
+    .then((arr) => {
+      dave.addSpouse(ed);
+    })
+    .catch(console.error.bind(console));
+
+    // dave.then((contact) => {
+    //   contact.addPhoneNumbers('phoneNumbers',{
+    //   number: '7733685517'
+    //   })
+    // })
     
   },
 

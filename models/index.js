@@ -43,6 +43,40 @@ const Contact = db.define('contacts', {
     },
     fullName: function () {
       return this.firstName + ' ' + this.middleName + ' ' + this.lastName;
+    },
+    age: function () {
+      if (this.dateOfBirth) {
+        let birthday = this.dateOfBirth;
+        function howManyLeapDays (birthday) {
+          //get the current year
+          let thisYear = new Date();
+          thisYear = thisYear.getFullYear();
+          //create an array of all the leap years since 1900
+          let leapYears = [];
+          for (var i = 1900; i < thisYear; i += 4) {
+            if (!(i%100 === 0 && i%400 !== 0)) {
+              leapYears.push(i);
+            }
+          }
+  
+          let withoutLeaps = Date.now() - birthday;
+          let birthYear = birthday.getFullYear();
+  
+          //work backward through that array and increment a count of leap days
+          let leapDays = 0;
+          while (birthYear < leapYears[leapYears.length-1]) {
+            leapDays++;
+            leapYears.pop();
+          }
+  
+          return leapDays;
+  
+        }
+        let leapDaysInMil = howManyLeapDays(this.birthday) * 86400000;
+        let leapDayOffset = (Date.now() - this.birthday) - leapDaysInMil;
+        let age = (leapDayOffset / 31536000000);
+        return Math.floor(age);
+      }
     }
   }
 });
@@ -111,11 +145,14 @@ const Email = db.define('emails', {
     type: Sequelize.STRING, 
     allownull: false,
     unique: true,
+    validate: {
+      isEmail: true,
+    }
   },
 });
 
 const PhoneOrEmailTypeName = db.define('phoneOrEmailTypeName', {
-  type: {
+  name: {
     type: Sequelize.STRING, 
     allownull: false,
   },
@@ -153,16 +190,17 @@ const Event = db.define('events', {
   },
 });
 
-Contact.belongsToMany(PhoneNumber, {as: 'PhoneNum', through: 'ContactPhone'});
+Contact.belongsToMany(PhoneNumber, {through: 'ContactPhone'});
 PhoneNumber.belongsToMany(Contact, {through: 'ContactPhone'});
-Contact.belongsToMany(Address, {as: 'Address', through: 'ContactAddress'});
+Contact.belongsToMany(Address, {through: 'ContactAddress'});
 Address.belongsToMany(Contact, {through: 'ContactAddress'});
-Email.belongsTo(PhoneOrEmailTypeName);
-PhoneNumber.belongsTo(PhoneOrEmailTypeName);
-Relationship.belongsTo(RelationshipType);
+Email.belongsTo(Contact);
 Contact.hasMany(Email);
+PhoneNumber.hasOne(PhoneOrEmailTypeName);
+Email.hasOne(PhoneOrEmailTypeName);
+// Relationship.belongsTo(RelationshipType);
+Event.belongsTo(Contact)
 Contact.hasMany(Event);
-Contact.hasMany(PhoneNumber);
 Contact.belongsToMany(Contact, {as: 'Children', through: 'contactChildren'});
 Contact.belongsToMany(Contact, {as: 'Parents', through: 'contactParents'});
 Contact.belongsTo(Contact, {as: 'Spouse'});
