@@ -22,7 +22,6 @@ const Contact = db.define('contacts', {
       isDate: true,
     },
     
-    
   },
 }, {
   getterMethods: {
