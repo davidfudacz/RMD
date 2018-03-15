@@ -76,23 +76,11 @@ module.exports = {
     let dave = m.Contact.findById(6);
     let laura = m.Contact.findById(1);
     let mom = m.Contact.findById(4);
-    let dad = m.Contact.findById(2);
+    let dad = m.Contact.findById(2)
+      .then((dad) => {
+        console.log(dad.age)
+      })
 
-
-    Promise.all([
-      ed,
-      dave
-    ])
-    .then((arr) => {
-      dave.addSpouse(ed);
-    })
-    .catch(console.error.bind(console));
-
-    // dave.then((contact) => {
-    //   contact.addPhoneNumbers('phoneNumbers',{
-    //   number: '7733685517'
-    //   })
-    // })
     
   },
 

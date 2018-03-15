@@ -21,6 +21,11 @@ const Contact = db.define('contacts', {
     validate: {
       isDate: true,
     },
+    set(date) {
+      let newDate = new Date(date);
+      newDate.setHours(36);//new Date on line 25 makes this off by a day, this fixes it...
+      this.setDataValue('dateOfBirth', newDate)
+    }
     
   },
 }, {
@@ -28,11 +33,12 @@ const Contact = db.define('contacts', {
     prettyDOB: function () {
 
       let birthday = new Date(this.getDataValue('dateOfBirth'));
+      birthday.setHours(36);
       
 
       let MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
       
-      let day = birthday.getDate()+1;//SOMETHING GOING ON WITH NEW DATE THAT MAKES THE DATE OFF BY 1
+      let day = birthday.getDate();//SOMETHING GOING ON WITH NEW DATE THAT MAKES THE DATE OFF BY 1
       let year = birthday.getFullYear();
       let month = birthday.getMonth();
       // console.log(day, month, year);
@@ -45,38 +51,19 @@ const Contact = db.define('contacts', {
       return this.firstName + ' ' + this.middleName + ' ' + this.lastName;
     },
     age: function () {
-      if (this.dateOfBirth) {
-        let birthday = this.dateOfBirth;
-        function howManyLeapDays (birthday) {
-          //get the current year
-          let thisYear = new Date();
-          thisYear = thisYear.getFullYear();
-          //create an array of all the leap years since 1900
-          let leapYears = [];
-          for (var i = 1900; i < thisYear; i += 4) {
-            if (!(i%100 === 0 && i%400 !== 0)) {
-              leapYears.push(i);
-            }
-          }
-  
-          let withoutLeaps = Date.now() - birthday;
-          let birthYear = birthday.getFullYear();
-  
-          //work backward through that array and increment a count of leap days
-          let leapDays = 0;
-          while (birthYear < leapYears[leapYears.length-1]) {
-            leapDays++;
-            leapYears.pop();
-          }
-  
-          return leapDays;
-  
+        let birthDate = this.getDataValue('dateOfBirth');
+        birthDate = new Date(birthDate);
+        let nowDate = new Date();
+    
+        var years = (nowDate.getFullYear() - birthDate.getFullYear());
+    
+        if (nowDate.getMonth() < birthDate.getMonth() || 
+            nowDate.getMonth() == birthDate.getMonth() && nowDate.getDate() < birthDate.getDate()+1) {
+            years--;
         }
-        let leapDaysInMil = howManyLeapDays(this.birthday) * 86400000;
-        let leapDayOffset = (Date.now() - this.birthday) - leapDaysInMil;
-        let age = (leapDayOffset / 31536000000);
-        return Math.floor(age);
-      }
+    
+        return years;
+    
     }
   }
 });
