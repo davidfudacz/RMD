@@ -32,7 +32,7 @@ router.get('/contacts/add', function (req,res,next) {
 });
 
 router.get('/contacts/:id/edit', function (req,res,next) {
-  console.log(req.params);
+  
   m.Contact.findById(req.params.id)
     .then(contactObj => {
       res.render('inputInfo',{
@@ -45,7 +45,7 @@ router.get('/contacts/:id/edit', function (req,res,next) {
 router.get('/contacts/:id', function (req,res,next) {
   m.Contact.findById(req.params.id)
     .then(contactObj => {
-      console.log(contactObj.dateOfBirth);
+      
       res.render('contact',{
         contact: contactObj
       });

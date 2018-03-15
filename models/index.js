@@ -41,7 +41,6 @@ const Contact = db.define('contacts', {
       let day = birthday.getDate();//SOMETHING GOING ON WITH NEW DATE THAT MAKES THE DATE OFF BY 1
       let year = birthday.getFullYear();
       let month = birthday.getMonth();
-      // console.log(day, month, year);
       return `${MONTHS[month]} ${day}, ${year}`;
     },
     firstLast: function () {

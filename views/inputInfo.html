@@ -8,7 +8,12 @@
 <h3>Add a new user</h3>
 {% endif %}
   <hr>
+  {% if contact %}
+  <form method="POST" action="/contacts/edit/{{contact.id}}">
+  {% else %}
   <form method="POST" action="/contacts/edit">
+  {% endif %}
+  
     
     
     <div class="form-group">
