@@ -33,31 +33,26 @@ router.post('/contacts/edit/:id', function (req, res, next) {
 
 })
 
-router.post('/contacts/edit', function (req, res, next) {
+router.post('/contacts/edit', async function (req, res, next) {
   const contactObj = req.body;
+  try {
+    const email = await m.Email.create({
+      emailAddress: contactObj.email,
+    })
+
+    const contact = await m.Contact.create({
+        firstName: contactObj.firstName,
+        lastName: contactObj.lastName,
+        dateOfBirth: contactObj.dateOfBirth,
+    })
+    const setEmail = await email.setContact(contact);
+  }
+  catch {
+    console.error('something happened')
+  }
+    console.log('Added email');
+    res.redirect('/contacts');
   
-  const emailPromise = m.Email.create({
-    emailAddress: contactObj.email,
-  })
-
-  const contactPromise = m.Contact.create({
-      firstName: contactObj.firstName,
-      lastName: contactObj.lastName,
-      dateOfBirth: contactObj.dateOfBirth,
-  })
-
-  Promise.all([emailPromise,contactPromise])
-    .then((array) => {
-      let email = array[0];
-      let contact = array[1];
-      return email.setContact(contact);
-    })
-    .then((email) => {
-      console.log('Added email');
-      res.redirect('/contacts');
-    })
-    .catch(next);
-
 })
 
 module.exports = router;

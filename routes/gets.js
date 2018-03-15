@@ -28,7 +28,14 @@ router.get('/contacts/', function (req,res,next) {
 });
 
 router.get('/contacts/add', function (req,res,next) {
-  res.render('inputInfo');
+  m.PhoneOrEmailTypeName.findAll()
+    .then(types => {
+      res.render('inputInfo',{
+        types: types
+      });
+
+    })
+  
 })
 
 router.get('/contacts/:id/edit', function (req,res,next) {
