@@ -47,9 +47,7 @@ router.post('/contacts/edit', async function (req, res, next) {
     })
     const setEmail = await email.setContact(contact);
   }
-  catch {
-    console.error('something happened')
-  }
+  catch console.error('something happened')
     console.log('Added email');
     res.redirect('/contacts');
   
