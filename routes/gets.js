@@ -32,11 +32,16 @@ router.get('/contacts/add', function (req,res,next) {
 })
 
 router.get('/contacts/:id/edit', function (req,res,next) {
-  
-  m.Contact.findById(req.params.id)
-    .then(contactObj => {
+  const phoneOrEmailTypesPromise = m.PhoneOrEmailTypeName.findAll();
+  const contactPromise = m.Contact.findById(req.params.id);
+
+  Promise.all([phoneOrEmailTypesPromise,contactPromise])
+    .then(promiseArray => {
+      let types = promiseArray[0];
+      let contact = promiseArray[1];
       res.render('inputInfo',{
-        contact: contactObj,
+        contact: contact,
+        types: types,
       });
     })
     .catch(next);

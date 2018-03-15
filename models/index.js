@@ -182,8 +182,8 @@ Contact.belongsToMany(Address, {as: 'Addresses', through: 'ContactAddress'});
 Address.belongsToMany(Contact, {as: 'contacts', through: 'ContactAddress'});
 Email.belongsTo(Contact);
 Contact.hasMany(Email);
-PhoneNumber.hasOne(PhoneOrEmailTypeName);
-// Email.hasOne(PhoneOrEmailTypeName);
+PhoneNumber.belongsTo(PhoneOrEmailTypeName);
+Email.belongsTo(PhoneOrEmailTypeName);
 // Relationship.belongsTo(RelationshipType);
 Event.belongsTo(Contact)
 Contact.hasMany(Event);
