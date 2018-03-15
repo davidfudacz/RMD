@@ -176,10 +176,10 @@ const Event = db.define('events', {
   },
 });
 
-Contact.belongsToMany(PhoneNumber, {through: 'ContactPhone'});
-PhoneNumber.belongsToMany(Contact, {through: 'ContactPhone'});
-Contact.belongsToMany(Address, {through: 'ContactAddress'});
-Address.belongsToMany(Contact, {through: 'ContactAddress'});
+Contact.belongsToMany(PhoneNumber, {as: 'phoneNumbers', through: 'ContactPhone'});
+PhoneNumber.belongsToMany(Contact, {as: 'contacts', through: 'ContactPhone'});
+Contact.belongsToMany(Address, {as: 'Addresses', through: 'ContactAddress'});
+Address.belongsToMany(Contact, {as: 'contacts', through: 'ContactAddress'});
 Email.belongsTo(Contact);
 Contact.hasMany(Email);
 PhoneNumber.hasOne(PhoneOrEmailTypeName);

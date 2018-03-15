@@ -7,6 +7,9 @@
       <li>{{ contact.fullName }}</li>
       <li>{{ contact.prettyDOB }}</li>
       <li>Age: {{ contact.age }}</li>
+      {% if email %}
+      <li>Email: {{ email }}</li>
+      {% endif %}
   </ul>
   <a href="{{ contact.id }}/edit">Edit this Contact</a>
 {% endblock %}

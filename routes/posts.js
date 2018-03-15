@@ -26,12 +26,14 @@ router.post('/contacts/edit', function (req, res, next) {
   const emailPromise = m.Email.create({
     emailAddress: contactObj.email,
   })
+  .catch(next)
 
   const contactPromise = m.Contact.create({
       firstName: contactObj.firstName,
       lastName: contactObj.lastName,
       dateOfBirth: contactObj.dateOfBirth,
   })
+  .catch(next);
 
   Promise.all([emailPromise,contactPromise])
     .then((array) => {

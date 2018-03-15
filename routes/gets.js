@@ -29,7 +29,7 @@ router.get('/contacts/', function (req,res,next) {
 
 router.get('/contacts/add', function (req,res,next) {
   res.render('inputInfo');
-});
+})
 
 router.get('/contacts/:id/edit', function (req,res,next) {
   
@@ -43,23 +43,17 @@ router.get('/contacts/:id/edit', function (req,res,next) {
 });
 
 router.get('/contacts/:id', function (req,res,next) {
-  m.Contact.findAll({
-    where: {
-      id: req.params.id,
-    },
-    include: [{
-      model: Email,
-      where: {
-        contactId: req.params.id,
-      }
-    }]
+  m.Contact.findById(req.params.id,{
+    include: [{model:m.Email}]
   })
     .then(contactObj => {
-      res.json(contactObj[0]);
-      // console.log(contactObj)
-      // res.render('contact',{
-      //   contact: contactObj[0]
-      // });
+      let renderObj = {
+        contact: contactObj,
+     }
+      if (contactObj.emails[0]) {
+        renderObj.email = contactObj.emails[0].emailAddress;
+      }
+      res.render('contact',renderObj);
     })
     .catch(next);
 });
