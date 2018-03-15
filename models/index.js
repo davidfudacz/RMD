@@ -33,7 +33,7 @@ const Contact = db.define('contacts', {
     prettyDOB: function () {
 
       let birthday = new Date(this.getDataValue('dateOfBirth'));
-      birthday.setHours(36);
+      birthday.setHours(36);//SAME THING HERE AS IN THE SETTER FOR BIRTHDAY
       
 
       let MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
