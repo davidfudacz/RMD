@@ -183,7 +183,7 @@ Address.belongsToMany(Contact, {through: 'ContactAddress'});
 Email.belongsTo(Contact);
 Contact.hasMany(Email);
 PhoneNumber.hasOne(PhoneOrEmailTypeName);
-Email.hasOne(PhoneOrEmailTypeName);
+// Email.hasOne(PhoneOrEmailTypeName);
 // Relationship.belongsTo(RelationshipType);
 Event.belongsTo(Contact)
 Contact.hasMany(Event);

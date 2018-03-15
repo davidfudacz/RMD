@@ -43,12 +43,23 @@ router.get('/contacts/:id/edit', function (req,res,next) {
 });
 
 router.get('/contacts/:id', function (req,res,next) {
-  m.Contact.findById(req.params.id)
+  m.Contact.findAll({
+    where: {
+      id: req.params.id,
+    },
+    include: [{
+      model: Email,
+      where: {
+        contactId: req.params.id,
+      }
+    }]
+  })
     .then(contactObj => {
-      
-      res.render('contact',{
-        contact: contactObj
-      });
+      res.json(contactObj[0]);
+      // console.log(contactObj)
+      // res.render('contact',{
+      //   contact: contactObj[0]
+      // });
     })
     .catch(next);
 });

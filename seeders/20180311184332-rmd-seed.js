@@ -78,7 +78,7 @@ module.exports = {
     let mom = m.Contact.findById(4);
     let dad = m.Contact.findById(2)
       .then((dad) => {
-        console.log(dad.age)
+        
       })
 
     

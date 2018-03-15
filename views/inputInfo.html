@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<div style="margin-top: 75px">
+<div>
 {% if contact %}
 <h3>Edit {{ contact.firstLast }}</h3>
 {% else %}
@@ -28,6 +28,10 @@
         <label for="lastName" class="col-sm-2 control-label">Last Name</label>
         <div class="col-sm-10">
           <input name="lastName" type="text" value = "{{ contact.lastName }}" class="form-control"/>
+        </div>
+        <label for="email" class="col-sm-2 control-label">Email Address</label>
+        <div class="col-sm-10">
+          <input name="email" type="text" value = "" class="form-control"/>
         </div>
         <label for="dateOfBirth" class="col-sm-2 control-label">Date of Birth</label>
         <div class="col-sm-10">
