@@ -40,16 +40,23 @@ router.get('/contacts/add', function (req,res,next) {
 
 router.get('/contacts/:id/edit', function (req,res,next) {
   const phoneOrEmailTypesPromise = m.PhoneOrEmailTypeName.findAll();
-  const contactPromise = m.Contact.findById(req.params.id);
+  const contactPromise = m.Contact.findById(req.params.id,{
+    include: [{model:m.Email}]
+  });
+
 
   Promise.all([phoneOrEmailTypesPromise,contactPromise])
     .then(promiseArray => {
       let types = promiseArray[0];
       let contact = promiseArray[1];
-      res.render('inputInfo',{
+      let renderContact = {
         contact: contact,
-        types: types,
-      });
+     }
+     renderContact.types = types;
+      if (contact.emails[0]) {
+        renderContact.email = contact.emails[0].emailAddress;
+      }
+      res.render('inputInfo',renderContact);
     })
     .catch(next);
 });
@@ -59,13 +66,13 @@ router.get('/contacts/:id', function (req,res,next) {
     include: [{model:m.Email}]
   })
     .then(contactObj => {
-      let renderObj = {
+      let renderContact = {
         contact: contactObj,
      }
       if (contactObj.emails[0]) {
-        renderObj.email = contactObj.emails[0].emailAddress;
+        renderContact.email = contactObj.emails[0].emailAddress;
       }
-      res.render('contact',renderObj);
+      res.render('contact',renderContact);
     })
     .catch(next);
 });

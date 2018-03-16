@@ -4,7 +4,7 @@
   <h3>{{ contact.firstLast }}</h3>
   <hr>
   <ul class="list-unstyled">
-      <li>{{ contact.fullName }}</li>
+      <li>{% if contact.middleName %}{{ contact.fullName }}{% else %}{{contact.firstLast}}{% endif %}</li>
       <li>{{ contact.prettyDOB }}</li>
       <li>Age: {{ contact.age }}</li>
       {% if email %}
