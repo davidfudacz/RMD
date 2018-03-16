@@ -17,4 +17,38 @@ label {
 
 .type-option {
   display: flex;
+  flex: 5;
+}
+div.form-group {
+  display: flex;
+  flex-direction: column;
+  align-content: space-between;
+}
+
+div.contact-input {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 40px;
+  margin: 5px 0 5px 0;
+  
+}
+
+label.contact-input {
+  flex: 1;
+}
+
+input.contact-input {
+  flex: 5;
+  border: solid 1px black;
+  padding: 2px;
+  border-radius: 4px;
+  
+}
+
+select.contact-input {
+  flex: 1;
+  border: solid 1px black;
+  padding: 2px;
+  border-radius: 4px;
+  
 }
