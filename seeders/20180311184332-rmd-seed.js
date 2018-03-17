@@ -71,6 +71,36 @@ module.exports = {
     .catch(console.error.bind(console));
 
 
+    m.RelationshipType.bulkCreate([{
+      singular: 'child',
+      plural: 'children',
+    },
+    {
+      singular: 'parent',
+      plural: 'parents',
+    },
+    {
+      singular: 'friend',
+      plural: 'friends',
+    },
+    {
+      singular: 'other',
+      plural: 'others',
+    },
+    {
+      singular: 'relative',
+      plural: 'relatives',
+    },
+    {
+      singular: 'sibling',
+      plural: 'siblings',
+    }])
+    .then(() => {
+      console.log('Phone & Email types created successfully!')
+    })
+    .catch(console.error.bind(console));
+
+
 
     let ed = m.Contact.findById(3);
     let dave = m.Contact.findById(6);
@@ -78,7 +108,6 @@ module.exports = {
     
     Promise.all([ed,dave])
       .then(([ed,dave]) => {
-        console.log('ed',ed,'\ndave',dave)
         ed.setSpouse(dave);
         dave.setSpouse(3);
       })

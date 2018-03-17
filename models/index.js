@@ -57,7 +57,7 @@ const Contact = db.define('contacts', {
         var years = (nowDate.getFullYear() - birthDate.getFullYear());
     
         if (nowDate.getMonth() < birthDate.getMonth() || 
-            nowDate.getMonth() == birthDate.getMonth() && nowDate.getDate() < birthDate.getDate()+1) {
+            nowDate.getMonth() === birthDate.getMonth() && nowDate.getDate() < birthDate.getDate()+1) {
             years--;
         }
     
@@ -148,10 +148,20 @@ const RelationshipType = db.define('relationshipTypes', {
   singular: {
     type: Sequelize.STRING, 
     allownull: false,
+    get: function () {
+      let firstLetter = this.getDataValue('singular').slice(0,1);
+      let theRest = this.getDataValue('singular').slice(1);
+      return firstLetter.toUpperCase() + theRest;
+    }
   },
   plural: {
     type: Sequelize.STRING, 
     allownull: false,
+    get: function () {
+      let firstLetter = this.getDataValue('plural').slice(0,1);
+      let theRest = this.getDataValue('plural').slice(1);
+      return firstLetter.toUpperCase() + theRest;
+    }
   },
 });
 
@@ -170,28 +180,28 @@ const Event = db.define('events', {
       isDate: true,
     }
   },
-  event: {
+  title: {
     type: Sequelize.STRING, 
     allownull: false,
+  },
+  description: {
+    type: Sequelize.TEXT, 
+    allownull: true,
   },
 });
 
 Contact.belongsToMany(PhoneNumber, {as: 'phoneNumbers', through: 'ContactPhone'});
-PhoneNumber.belongsToMany(Contact, {as: 'contacts', through: 'ContactPhone'});
 Contact.belongsToMany(Address, {as: 'Addresses', through: 'ContactAddress'});
-Address.belongsToMany(Contact, {as: 'contacts', through: 'ContactAddress'});
-Email.belongsTo(Contact);
 Contact.hasMany(Email);
-PhoneNumber.belongsTo(PhoneOrEmailTypeName);
-Email.belongsTo(PhoneOrEmailTypeName);
-// Relationship.belongsTo(RelationshipType);
-Event.belongsTo(Contact)
+PhoneNumber.belongsTo(PhoneOrEmailTypeName, {as: 'phoneType'});
+Email.belongsTo(PhoneOrEmailTypeName, {as: 'emailType'});
 Contact.hasMany(Event);
 Contact.belongsToMany(Contact, {as: 'Children', through: 'contactChildren'});
 Contact.belongsToMany(Contact, {as: 'Parents', through: 'contactParents'});
 Contact.belongsTo(Contact, {as: 'Spouse'});
 Contact.belongsToMany(Contact, {as: 'Siblings', through: 'contactSiblings'});
 Contact.belongsToMany(Contact, {as: 'Relatives', through: 'contactRelatives'});
+Contact.belongsToMany(Contact, {as: 'Friends', through: 'contactFriends'});
 Contact.belongsToMany(Contact, {as: 'Others', through: 'contactOthers'});
 
 

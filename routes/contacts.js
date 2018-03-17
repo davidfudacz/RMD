@@ -86,6 +86,8 @@ router.get('/:id', function (req, res, next) {
 
 router.post('/edit/:id', function (req, res, next) {
   const contactId = req.params.id;
+  const emailType = req.body.emailType;
+  console.log(req.body);
   const contactObj = {
     firstName: req.body.firstName,
     lastName: req.body.lastName,
@@ -103,7 +105,10 @@ router.post('/edit/:id', function (req, res, next) {
     .then((array) => {
       let email = array[0];
       let contact = array[1];
-      return email.setContact(contact);
+      return Promise.all([
+        email.setEmailType(emailType),
+        contact.addEmail(email)
+      ]);
     })
     .then((email) => {
       console.log('Added email');
@@ -126,10 +131,13 @@ router.post('/edit', async function (req, res, next) {
     dateOfBirth: contactObj.dateOfBirth,
   })
   Promise.all([email, contact])
-    .then(arr => {
-      let email = arr[0];
-      let contact = arr[1];
-      return email.setContact(contact);
+    .then(array => {
+      let email = array[0];
+      let contact = array[1];
+      return Promise.all([
+        email.setEmailType(emailType),
+        contact.addEmail(email)
+      ]);
     })
     .then(() => {
       console.log('Added email');

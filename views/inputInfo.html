@@ -33,9 +33,9 @@
             <label for="email" class="contact-input">Email Address</label>
           <div class="type-option">
             <input name="email" type="text" value = "{% if email %}{{email}}{% endif %}" class="contact-input"/>
-            <select class="contact-input">
+            <select name="emailType" class="contact-input">
               {% for type in types %}
-              <option name="emailType" value="{{type.id}}">{{type.name}}</option>
+              <option value="{{type.id}}">{{type.name}}</option>
               {% endfor %}
             </select>
           </div>  
