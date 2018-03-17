@@ -1,13 +1,17 @@
 'use strict'
 const express = require('express');
 const router = express.Router();
-const models = require('../models');
 const posts = require('./posts');
-const gets = require('./gets');
+const contacts = require('./contacts');
+const models = require('../models');
 
 
-router.use(gets);
-router.use(posts);
+
+router.use('/contacts',contacts);
+
+router.get('/', function (req,res,next) {
+  res.render('index',{title:``});
+});
 
 module.exports = router;
 

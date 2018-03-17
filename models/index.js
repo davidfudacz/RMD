@@ -195,8 +195,6 @@ Contact.belongsToMany(Contact, {as: 'Relatives', through: 'contactRelatives'});
 Contact.belongsToMany(Contact, {as: 'Others', through: 'contactOthers'});
 
 
-
-
 module.exports = {
   db,
   Contact,

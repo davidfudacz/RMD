@@ -74,12 +74,16 @@ module.exports = {
 
     let ed = m.Contact.findById(3);
     let dave = m.Contact.findById(6);
-    let laura = m.Contact.findById(1);
-    let mom = m.Contact.findById(4);
-    let dad = m.Contact.findById(2)
-      .then((dad) => {
-        
+    
+    
+    Promise.all([ed,dave])
+      .then(([ed,dave]) => {
+        console.log('ed',ed,'\ndave',dave)
+        ed.setSpouse(dave);
+        dave.setSpouse(3);
       })
+      .catch(console.error.bind(console));
+    
 
     
   },
