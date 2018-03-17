@@ -96,22 +96,9 @@ module.exports = {
       plural: 'siblings',
     }])
     .then(() => {
-      console.log('Phone & Email types created successfully!')
+      console.log('Relationship types created successfully!')
     })
     .catch(console.error.bind(console));
-
-
-
-    let ed = m.Contact.findById(3);
-    let dave = m.Contact.findById(6);
-    
-    
-    Promise.all([ed,dave])
-      .then(([ed,dave]) => {
-        ed.setSpouse(dave);
-        dave.setSpouse(3);
-      })
-      .catch(console.error.bind(console));
     
 
     

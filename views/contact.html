@@ -3,6 +3,7 @@
 {% block content %}
   <h3>{{ contact.firstLast }}</h3>
   <hr>
+  <h5>Contact Info</h5>
   <ul class="list-unstyled">
       <li>{% if contact.middleName %}{{ contact.fullName }}{% else %}{{contact.firstLast}}{% endif %}</li>
       <li>{{ contact.prettyDOB }}</li>
@@ -11,5 +12,55 @@
       <li>Email: {{ email }}</li>
       {% endif %}
   </ul>
-  <a href="{{ contact.id }}/edit">Edit this Contact</a>
+  <h4>Relationships</h4>
+  <h5>Spouse</h5>
+  <ul class="list-unstyled">
+      <li><a href="/contacts/{{ contact.Spouse.id }}">{{ contact.Spouse.firstLast }}</a></li>
+  </ul>
+
+  <h5>Parents</h5>
+  <ul class="list-unstyled">
+    {%for parent in contact.Parents %}
+      <li><a href="/contacts/{{ parent.id }}">{{ parent.firstLast }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Children</h5>
+  <ul class="list-unstyled">
+    {%for child in contact.Children %}
+      <li><a href="/contacts/{{ child.id }}">{{ child.firstLast }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Siblings</h5>
+  <ul class="list-unstyled">
+    {%for sibling in contact.Siblings %}
+      <li><a href="/contacts/{{ sibling.id }}">{{ sibling.firstLast }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Relatives</h5>
+  <ul class="list-unstyled">
+    {%for relative in contact.Relatives %}
+      <li><a href="/contacts/{{ relative.id }}">{{ relative.firstLast }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Friends</h5>
+  <ul class="list-unstyled">
+    {%for friend in contact.Friends %}
+      <li><a href="/contacts/{{ friend.id }}">{{ friend.firstLast }}</a></li>
+    {% endfor %}
+  </ul>
+
+  <h5>Others</h5>
+  <ul class="list-unstyled">
+    {%for other in contact.Others %}
+      <li><a href="/contacts/{{ other.id }}">{{ other.firstLast }}</a></li>
+    {% endfor %}
+  </ul>
+
+
+  <p><a href="{{ contact.id }}/edit">Edit this Contact</a></p>
+  <p><a href="../relationships/add/{{ contact.id }}">Add Relationships</a></p>
 {% endblock %}

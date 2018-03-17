@@ -43,20 +43,19 @@ router.get('/add/:id', (req,res,next) => {
 
 
 router.post('/add/:id', (req,res,next) => {
+
   const contact = Contact.findById(req.params.id);
   const target = Contact.findById(req.body.contact);
   const relationshipType = RelationshipType.findById(req.body.relationship);
 
   Promise.all([contact,target,relationshipType])
     .then(([contact,target,relType]) => {
-      console.log(relType.singular);
       switch (relType.singular) {
         case 'Child': {
           Promise.all([
             contact.addChild(target),
             target.addParent(contact)
           ])
-          .catch(console.error.bind(console));
         };
           break;
         case 'Parent': {
@@ -64,7 +63,6 @@ router.post('/add/:id', (req,res,next) => {
             contact.addParent(target),
             target.addChild(contact)
           ])
-          .catch(console.error.bind(console));
         };
           break;
         case 'Friend': {
@@ -72,7 +70,6 @@ router.post('/add/:id', (req,res,next) => {
             contact.addFriend(target),
             target.addFriend(contact)
           ])
-          .catch(console.error.bind(console));
         };
           break;
         case 'Other': {
@@ -80,7 +77,6 @@ router.post('/add/:id', (req,res,next) => {
             contact.addOther(target),
             target.addOther(contact)
           ])
-          .catch(console.error.bind(console));
         };
           break;
         case 'Relative': {
@@ -88,7 +84,6 @@ router.post('/add/:id', (req,res,next) => {
             contact.addRelative(target),
             target.addRelative(contact)
           ])
-          .catch(console.error.bind(console));
         };
           break;
         case 'Sibling': {
@@ -96,13 +91,32 @@ router.post('/add/:id', (req,res,next) => {
             contact.addSibling(target),
             target.addSibling(contact)
           ])
-          .catch(console.error.bind(console));
         };
           break;
       }
     })
-  res.json(req.body);
+      .then(() => {
+        res.redirect('/contacts/'+req.params.id);
+      })
+      .catch(next);
   
+})
+
+
+router.post('/addSpouse/:id', (req,res,next) => {
+  const spouse = Contact.findById(req.body.spouseId);
+  const contact = Contact.findById(req.params.id);
+
+  Promise.all([spouse,contact])
+    .then(([spouse,contact]) => {
+      contact.setSpouse(spouse);
+      spouse.setSpouse(contact);
+      res.redirect('/contacts/'+req.params.id);
+    })
+    .catch(next);
+  
+
+
 })
 
 module.exports = router;
