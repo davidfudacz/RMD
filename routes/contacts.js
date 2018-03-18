@@ -49,9 +49,8 @@ router.get('/add', function (req, res, next) {
 router.get('/:id/edit', function (req, res, next) {
   const phoneOrEmailTypesPromise = PhoneOrEmailTypeName.findAll();
   const contactPromise = Contact.findById(req.params.id, {
-    include: [{ model: Email }]
+    include: [{ model: Email, as: 'Emails'}]
   });
-
 
   Promise.all([phoneOrEmailTypesPromise, contactPromise])
     .then(promiseArray => {
@@ -61,7 +60,7 @@ router.get('/:id/edit', function (req, res, next) {
         contact: contact,
       }
       renderContact.types = types;
-      if (contact.emails[0]) {
+      if (contact.emails) {
         renderContact.email = contact.emails[0].emailAddress;
       }
       res.render('inputInfo', renderContact);
@@ -74,7 +73,18 @@ router.get('/:id', function (req, res, next) {
     include: [{ all: true }]
   })
     .then(contactObj => {
-      res.render('contact', {contact: contactObj});
+      let relationshipsObj = {
+        'children': contactObj.Children,
+        'parents': contactObj.Parents,
+        'spouse': contactObj.Spouse,
+        'siblings': contactObj.Siblings,
+        'relatives': contactObj.Relatives,
+      };
+      // return res.json(relationshipsObj);
+      res.render('contact', {
+        contact: contactObj,
+        relationships: relationshipsObj,
+      });
     })
     .catch(next);
 });
@@ -116,32 +126,48 @@ router.post('/edit/:id', function (req, res, next) {
 
 router.post('/add', async function (req, res, next) {
   const contactObj = req.body;
-  const emailType = req.body.emailType;
-  console.log(contactObj);
 
-  const email = Email.create({
-    emailAddress: contactObj.email,
-  })
+  if (contactObj.email) {
+    console.log(contactObj)
+    const emailType = req.body.emailType;
+    const email = Email.create({
+      emailAddress: contactObj.email,
+    })
+  
+    const contact = Contact.create({
+      firstName: contactObj.firstName,
+      middleName: contactObj.middleName,
+      lastName: contactObj.lastName,
+      dateOfBirth: contactObj.dateOfBirth,
+    })
+    Promise.all([email, contact])
+      .then(array => {
+        let email = array[0];
+        let contact = array[1];
+        return Promise.all([
+          email.setEmailType(emailType),
+          contact.addEmail(email)
+        ]);
+      })
+      .then(() => {
+        console.log('Added email');
+        res.redirect('/contacts');
+      })
+      .catch(console.error.bind(console));
+  }
+  else {
+    const contact = Contact.create({
+      firstName: contactObj.firstName,
+      middleName: contactObj.middleName,
+      lastName: contactObj.lastName,
+      dateOfBirth: contactObj.dateOfBirth,
+    })
+      .then(() => {
+        res.redirect('/contacts');
+      })
+      .catch(console.error.bind(console));
 
-  const contact = Contact.create({
-    firstName: contactObj.firstName,
-    lastName: contactObj.lastName,
-    dateOfBirth: contactObj.dateOfBirth,
-  })
-  Promise.all([email, contact])
-    .then(array => {
-      let email = array[0];
-      let contact = array[1];
-      return Promise.all([
-        email.setEmailType(emailType),
-        contact.addEmail(email)
-      ]);
-    })
-    .then(() => {
-      console.log('Added email');
-      res.redirect('/contacts');
-    })
-    .catch(console.error.bind(console));
+  }
 
 })
 

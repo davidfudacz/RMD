@@ -22,17 +22,27 @@ const Contact = db.define('contacts', {
       isDate: true,
     },
     set(date) {
-      let newDate = new Date(date);
-      newDate.setHours(36);//new Date on line 25 makes this off by a day, this fixes it...
-      this.setDataValue('dateOfBirth', newDate)
+      if (!date) this.setDataValue('dateOfBirth', null);
+      else {
+        let newDate = new Date(date);
+        newDate.setHours(36);//new Date on line 25 makes this off by a day, this fixes it...
+        this.setDataValue('dateOfBirth', newDate)
+      }
+    },
+    get() {
+      let dob = this.getDataValue('dateOfBirth')
+      if (dob) return dob;
+      else return '';
     }
     
   },
 }, {
   getterMethods: {
     prettyDOB: function () {
+      let dob = this.getDataValue('dateOfBirth')
+      if (!dob) return '';
 
-      let birthday = new Date(this.getDataValue('dateOfBirth'));
+      let birthday = new Date(dob);
       birthday.setHours(36);//SAME THING HERE AS IN THE SETTER FOR BIRTHDAY
       
 
@@ -50,16 +60,25 @@ const Contact = db.define('contacts', {
       return this.firstName + ' ' + this.middleName + ' ' + this.lastName;
     },
     age: function () {
-        let birthDate = this.getDataValue('dateOfBirth');
+      let birthDate = this.getDataValue('dateOfBirth')
+      if (!birthDate) return '';
         birthDate = new Date(birthDate);
         let nowDate = new Date();
     
         var years = (nowDate.getFullYear() - birthDate.getFullYear());
+
     
         if (nowDate.getMonth() < birthDate.getMonth() || 
             nowDate.getMonth() === birthDate.getMonth() && nowDate.getDate() < birthDate.getDate()+1) {
             years--;
         }
+        if (years < 2) {
+          let months = (nowDate.getFullYear() - birthDate.getFullYear())*12;
+          months += (nowDate.getMonth() - birthDate.getMonth());
+          if ((nowDate.getDate() - birthDate.getDate()-1)<0) months--;
+          return months+' Months';
+        }
+
     
         return years;
     
@@ -129,10 +148,18 @@ const PhoneNumber = db.define('phoneNumbers', {
 const Email = db.define('emails', {
   emailAddress: {
     type: Sequelize.STRING, 
-    allownull: false,
+    allownull: true,
     unique: true,
     validate: {
       isEmail: true,
+    },
+    get() {
+      let email = this.getDataValue('emailAddress');
+      if (!email) return ''
+      else return email;
+    },
+    set(email) {
+      if (!email) this.setDataValue('dateOfBirth', null);
     }
   },
 });
@@ -172,6 +199,17 @@ const Relationship = db.define('relationships', {
   },
 });
 
+const Pet = db.define('pets', {
+  name: {
+    type: Sequelize.STRING,
+    allowNull: false,
+  },
+  type: {
+    type: Sequelize.ENUM('cat','dog','bird','horse'),
+    allowNull: false,
+  },
+});
+
 const Event = db.define('events', {
   date: {
     type: Sequelize.DATEONLY, 
@@ -190,12 +228,13 @@ const Event = db.define('events', {
   },
 });
 
-Contact.belongsToMany(PhoneNumber, {as: 'phoneNumbers', through: 'ContactPhone'});
+Contact.belongsToMany(PhoneNumber, {as: 'Phone Numbers', through: 'ContactPhone'});
 Contact.belongsToMany(Address, {as: 'Addresses', through: 'ContactAddress'});
-Contact.hasMany(Email);
+Contact.hasMany(Email, {as: 'Emails'});
 PhoneNumber.belongsTo(PhoneOrEmailTypeName, {as: 'phoneType'});
 Email.belongsTo(PhoneOrEmailTypeName, {as: 'emailType'});
 Contact.hasMany(Event);
+Contact.hasMany(Pet,{as: "Pets"});
 Contact.belongsToMany(Contact, {as: 'Children', through: 'contactChildren'});
 Contact.belongsToMany(Contact, {as: 'Parents', through: 'contactParents'});
 Contact.belongsTo(Contact, {as: 'Spouse'});

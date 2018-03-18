@@ -33,10 +33,10 @@ app.use((err, req, res, next) => {
   console.error(err)
   res.sendStatus(500);
 })
-models.db.sync({ force: true })
-  .then(function () {
-    seeder.up(models);
-  })
+models.db.sync({ force: false })
+  // .then(function () {
+  //   seeder.up(models);
+  // })
   .then(function () {
     console.log('All tables created!');
     app.listen(3000, function () {

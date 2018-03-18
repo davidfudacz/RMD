@@ -1,65 +1,77 @@
 {% extends "layout.html" %}
 
 {% block content %}
+  <div>
   <h3>{{ contact.firstLast }}</h3>
+  <a href="{{ contact.id }}/edit">Edit this Contact</a> 
+  </div>
   <hr>
-  <h5>Contact Info</h5>
+  <h4>Contact Info</h4>
   <ul class="list-unstyled">
       <li>{% if contact.middleName %}{{ contact.fullName }}{% else %}{{contact.firstLast}}{% endif %}</li>
       <li>{{ contact.prettyDOB }}</li>
+      {% if contact.age %}
       <li>Age: {{ contact.age }}</li>
+      {% endif %}
       {% if email %}
       <li>Email: {{ email }}</li>
       {% endif %}
   </ul>
-  <h4>Relationships</h4>
+  <hr>
+  <h4>Family</h4>
+  {% if relationships.spouse %}
   <h5>Spouse</h5>
   <ul class="list-unstyled">
-      <li><a href="/contacts/{{ contact.Spouse.id }}">{{ contact.Spouse.firstLast }}</a></li>
+      <li><a href="/contacts/{{ relationships.spouse.id }}">{{ relationships.spouse.firstName }}</a></li>
   </ul>
+  {% endif %}
 
+  {% if relationships.parents.length %}
   <h5>Parents</h5>
   <ul class="list-unstyled">
-    {%for parent in contact.Parents %}
+    {% for parent in relationships.parents %}
       <li><a href="/contacts/{{ parent.id }}">{{ parent.firstLast }}</a></li>
     {% endfor %}
   </ul>
+  {% endif %}
 
+  {% if relationships.children.length %}
   <h5>Children</h5>
   <ul class="list-unstyled">
-    {%for child in contact.Children %}
-      <li><a href="/contacts/{{ child.id }}">{{ child.firstLast }}</a></li>
+    {% for child in relationships.children %}
+      <li><a href="/contacts/{{ child.id }}">{{ child.firstName }}</a></li>
     {% endfor %}
   </ul>
+  {% endif %}
 
+  {% if relationships.siblings.length %}
   <h5>Siblings</h5>
   <ul class="list-unstyled">
-    {%for sibling in contact.Siblings %}
+    {% for sibling in relationships.siblings %}
       <li><a href="/contacts/{{ sibling.id }}">{{ sibling.firstLast }}</a></li>
     {% endfor %}
   </ul>
+  {% endif %}
 
+  {% if relationships.relatives.length %}
   <h5>Relatives</h5>
   <ul class="list-unstyled">
-    {%for relative in contact.Relatives %}
-      <li><a href="/contacts/{{ relative.id }}">{{ relative.firstLast }}</a></li>
+    {% for relative in relationships.relatives %}
+      <li><a href="/contacts/{{ relative.id }}">{{ relative.firstName }}</a></li>
     {% endfor %}
   </ul>
+  {% endif %}
 
+  {% if relationships.friends.length %}
   <h5>Friends</h5>
   <ul class="list-unstyled">
-    {%for friend in contact.Friends %}
-      <li><a href="/contacts/{{ friend.id }}">{{ friend.firstLast }}</a></li>
+    {% for friend in relationships.friends %}
+      <li><a href="/contacts/{{ friend.id }}">{{ friend.firstName }}</a></li>
     {% endfor %}
   </ul>
+  {% endif %}
 
-  <h5>Others</h5>
-  <ul class="list-unstyled">
-    {%for other in contact.Others %}
-      <li><a href="/contacts/{{ other.id }}">{{ other.firstLast }}</a></li>
-    {% endfor %}
-  </ul>
-
+  <hr>
 
   <p><a href="{{ contact.id }}/edit">Edit this Contact</a></p>
   <p><a href="../relationships/add/{{ contact.id }}">Add Relationships</a></p>
