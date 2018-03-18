@@ -1,9 +1,10 @@
 {% extends "layout.html" %}
 
 {% block content %}
-  <div>
-  <h3>{{ contact.firstLast }}</h3>
-  <a href="{{ contact.id }}/edit">Edit this Contact</a> 
+  <div class="contactHeader">
+    <h3>{{ contact.firstLast }}</h3>
+    <a href="{{ contact.id }}/edit">Edit</a> 
+    <a href="../relationships/add/{{ contact.id }}">Add Relationships</a>
   </div>
   <hr>
   <h4>Contact Info</h4>
@@ -72,7 +73,4 @@
   {% endif %}
 
   <hr>
-
-  <p><a href="{{ contact.id }}/edit">Edit this Contact</a></p>
-  <p><a href="../relationships/add/{{ contact.id }}">Add Relationships</a></p>
 {% endblock %}
